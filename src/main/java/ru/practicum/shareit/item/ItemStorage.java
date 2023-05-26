@@ -1,11 +1,11 @@
-package ru.practicum.shareit.booking.item;
+package ru.practicum.shareit.item;
 
 import lombok.SneakyThrows;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
-import ru.practicum.shareit.booking.item.dto.ItemDto;
-import ru.practicum.shareit.booking.item.dto.ItemMapper;
-import ru.practicum.shareit.booking.item.model.Item;
+import ru.practicum.shareit.item.dto.ItemDto;
+import ru.practicum.shareit.item.dto.ItemMapper;
+import ru.practicum.shareit.item.model.Item;
 import ru.practicum.shareit.exception.UserNotFoundException;
 import ru.practicum.shareit.user.IUserService;
 
@@ -44,7 +44,7 @@ public class ItemStorage {
             throw new NullPointerException("Предмет не найден");
         }
         Item updateItem = items.get(itemId);
-        if (updateItem.getOwner() != userId) {
+        if (!updateItem.getOwner().equals(userId)) {
             throw new UserNotFoundException("Пользователь не найден");
         }
 
@@ -73,7 +73,7 @@ public class ItemStorage {
     }
 
     public List<ItemDto> getItems(Long userId) {
-        List<Item> allItems = items.values().parallelStream().filter(item -> item.getOwner() == userId).collect(Collectors.toList());
+        List<Item> allItems = items.values().parallelStream().filter(item -> item.getOwner().equals(userId)).collect(Collectors.toList());
         List<ItemDto> itemDtos = new ArrayList<>();
         for (Item item : allItems) {
             itemDtos.add(ItemMapper.toItemDto(item));
@@ -87,8 +87,8 @@ public class ItemStorage {
             return searchItems;
         }
         for (Item item : items.values()) {
-            if (item.getName().toLowerCase().contains(text.toLowerCase()) ||
-                    item.getDescription().toLowerCase().contains(text.toLowerCase()) &&
+            if ((item.getName().toLowerCase().contains(text.toLowerCase()) ||
+                    item.getDescription().toLowerCase().contains(text.toLowerCase())) &&
                             item.getAvailable() == true) {
                 searchItems.add(ItemMapper.toItemDto(item));
             }

@@ -1,8 +1,8 @@
-package ru.practicum.shareit.booking.item;
+package ru.practicum.shareit.item;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import ru.practicum.shareit.booking.item.dto.ItemDto;
+import ru.practicum.shareit.item.dto.ItemDto;
 
 import java.util.List;
 

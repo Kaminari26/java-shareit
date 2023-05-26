@@ -1,6 +1,6 @@
-package ru.practicum.shareit.booking.item.dto;
+package ru.practicum.shareit.item.dto;
 
-import ru.practicum.shareit.booking.item.model.Item;
+import ru.practicum.shareit.item.model.Item;
 
 public class ItemMapper {
     public static ItemDto toItemDto(Item item) {
