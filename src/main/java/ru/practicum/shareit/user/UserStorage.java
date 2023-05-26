@@ -42,7 +42,7 @@ public class UserStorage {
         if (user.getEmail() != null) {
             for (User str : users.values()) {
                 if (str.getEmail().equals(user.getEmail())) {
-                    if (str.getId() != userId) {
+                    if (str.getId().equals(userId)) {
                         throw new ValidationException("Почта уже используется");
                     }
                     break;
