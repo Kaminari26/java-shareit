@@ -17,5 +17,4 @@ public class Booking {
     private Item item;
     private User booker;
     private String status;
-    //Я не уверен что я не должен был развивать эту часть кода, но наставник писал что если тз этого явно не требует, то не надо. Так что это не я дурак забыл)
 }

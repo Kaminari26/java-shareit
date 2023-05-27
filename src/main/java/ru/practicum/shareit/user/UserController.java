@@ -8,14 +8,11 @@ import ru.practicum.shareit.user.dto.UserDto;
 import javax.validation.Valid;
 import java.util.List;
 
-/**
- * TODO Sprint add-controllers.
- */
 @RestController
 @Slf4j
 @RequestMapping(path = "/users")
 public class UserController {
-    IUserService userService;
+    private final IUserService userService;
 
     @Autowired
     public UserController(IUserService userService) {
@@ -25,19 +22,25 @@ public class UserController {
     @PostMapping
     public UserDto createUser(@Valid @RequestBody UserDto userDto) {
         log.info("Пришел запрос Post /users");
-        return userService.add(userDto);
+        UserDto userDtoReady = userService.add(userDto);
+        log.info("Отправлен ответ " + userDtoReady);
+        return userDtoReady;
     }
 
     @PatchMapping("/{userId}")
     public UserDto updateUser(@RequestBody UserDto userDto, @PathVariable Long userId) {
         log.info("Обновление пользователя с id = " + userId);
-        return userService.update(userDto, userId);
+        UserDto userDtoReady = userService.update(userDto, userId);
+        log.info("Отправлен ответ " + userDtoReady);
+        return userDtoReady;
     }
 
     @GetMapping("/{userId}")
     public UserDto getUser(@PathVariable Long userId) {
         log.info("Запрос пользователя Get " + userId);
-        return userService.get(userId);
+        UserDto userDtoReady = userService.get(userId);
+        log.info("Отправлен ответ " + userDtoReady);
+        return userDtoReady;
     }
 
     @DeleteMapping("/{userId}")
@@ -49,7 +52,8 @@ public class UserController {
     @GetMapping
     public List<UserDto> getUsers() {
         log.info("Список пользователей");
-        return userService.getUsers();
-
+        List<UserDto> usersDto = userService.getUsers();
+        log.info("Отправлен ответ" + usersDto);
+        return usersDto;
     }
 }

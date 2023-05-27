@@ -1,5 +1,6 @@
-package ru.practicum.shareit.item.dto;
+package ru.practicum.shareit.item.ItemMapper;
 
+import ru.practicum.shareit.item.dto.ItemDto;
 import ru.practicum.shareit.item.model.Item;
 
 public class ItemMapper {
@@ -21,8 +22,7 @@ public class ItemMapper {
                 itemDto.getName(),
                 itemDto.getDescription(),
                 itemDto.getAvailable(),
-                owner,
-                null
+                owner
         );
 
     }

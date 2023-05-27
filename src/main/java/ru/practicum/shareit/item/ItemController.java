@@ -8,14 +8,11 @@ import ru.practicum.shareit.item.dto.ItemDto;
 import javax.validation.Valid;
 import java.util.List;
 
-/**
- * TODO Sprint add-controllers.
- */
 @RestController
 @Slf4j
 @RequestMapping("/items")
 public class ItemController {
-    ItemService itemService;
+    private final ItemService itemService;
 
     @Autowired
     public ItemController(ItemService itemService) {
@@ -25,7 +22,9 @@ public class ItemController {
     @PostMapping
     public ItemDto createItem(@Valid @RequestBody ItemDto itemDto, @RequestHeader("X-Sharer-User-Id") Long owner) {
         log.info("Пришел запрос Post /items");
-        return itemService.add(itemDto, owner);
+        ItemDto itemDtoReady = itemService.add(itemDto, owner);
+        log.info("Отправлен ответ " + itemDtoReady);
+        return itemDtoReady;
     }
 
     @PatchMapping("/{itemId}")
@@ -33,13 +32,17 @@ public class ItemController {
                               @PathVariable Long itemId,
                               @RequestHeader("X-Sharer-User-Id") Long userId) {
         log.info("Обновление предмета с id = " + itemId);
-        return itemService.update(itemDto, itemId, userId);
+        ItemDto itemDtoReady = itemService.update(itemDto, itemId, userId);
+        log.info("Обновленный предмет " + itemDtoReady);
+        return itemDtoReady;
     }
 
     @GetMapping("/{itemId}")
     public ItemDto getItem(@PathVariable Long itemId) {
         log.info("Запрос предмета Get " + itemId);
-        return itemService.get(itemId);
+        ItemDto itemDtoReady = itemService.get(itemId);
+        log.info("Отправлен ответ " + itemDtoReady);
+        return itemDtoReady;
     }
 
     @DeleteMapping("/{itemId}")
@@ -51,12 +54,16 @@ public class ItemController {
     @GetMapping
     public List<ItemDto> getItems(@RequestHeader("X-Sharer-User-Id") Long owner) {
         log.info("Список пользователей");
-        return itemService.getItems(owner);
+        List<ItemDto> itemDtoReady = itemService.getItems(owner);
+        log.info("Отправлен список " + itemDtoReady);
+        return itemDtoReady;
     }
 
     @GetMapping("/search")
     public List<ItemDto> searchItem(@RequestParam String text) {
         log.info("Поиск предмета");
-        return itemService.searchItem(text);
+        List<ItemDto> itemDtoReady = itemService.searchItem(text);
+        log.info("Отправлен ответ " + itemDtoReady);
+        return itemDtoReady;
     }
 }
