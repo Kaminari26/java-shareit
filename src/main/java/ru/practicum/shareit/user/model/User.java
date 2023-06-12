@@ -3,7 +3,6 @@ package ru.practicum.shareit.user.model;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.RequiredArgsConstructor;
-import org.hibernate.validator.constraints.UniqueElements;
 
 import javax.persistence.*;
 import javax.validation.constraints.Email;
@@ -23,6 +22,6 @@ public class User {
 
     @NotBlank
     @Email
-    @Column(unique=true)
+    @Column(unique = true)
     private String email;
 }

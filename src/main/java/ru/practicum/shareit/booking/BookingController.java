@@ -1,13 +1,11 @@
 package ru.practicum.shareit.booking;
 
 import lombok.extern.slf4j.Slf4j;
-import org.aspectj.lang.annotation.SuppressAjWarnings;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import ru.practicum.shareit.booking.dto.BookingDto;
 import ru.practicum.shareit.booking.dto.BookingDtoResponse;
 import ru.practicum.shareit.booking.dto.IBookingService;
-import ru.practicum.shareit.item.dto.ItemDto;
 
 import javax.validation.Valid;
 import java.util.List;
@@ -24,7 +22,7 @@ public class BookingController {
     }
 
     @PostMapping
-    public BookingDtoResponse createBooking (@Valid @RequestBody BookingDto bookingDto, @RequestHeader("X-Sharer-User-Id") Long owner) {
+    public BookingDtoResponse createBooking(@Valid @RequestBody BookingDto bookingDto, @RequestHeader("X-Sharer-User-Id") Long owner) {
         log.info("Пришел запрос Post в Booking");
         BookingDtoResponse booking = bookingService.add(bookingDto, owner);
         log.info("Отправлен ответ " + booking);
@@ -53,13 +51,13 @@ public class BookingController {
 
     @GetMapping
     public List<BookingDtoResponse> getBookingsByBooker(@RequestHeader(name = "X-Sharer-User-Id") Long userId,
-                                                           @RequestParam(name = "state", defaultValue = "ALL") String state) {
+                                                        @RequestParam(name = "state", defaultValue = "ALL") String state) {
         return bookingService.getAllByBookers(userId, state);
     }
 
     @GetMapping("/owner")
     public List<BookingDtoResponse> getBookingsByOwner(@RequestHeader(name = "X-Sharer-User-Id") Long userId,
-                                                          @RequestParam(name = "state", defaultValue = "ALL") String state) {
+                                                       @RequestParam(name = "state", defaultValue = "ALL") String state) {
         return bookingService.getAllByOwner(userId, state);
     }
 }

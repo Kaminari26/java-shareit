@@ -20,6 +20,7 @@ public interface IItemService {
 
     List<ItemDto> searchItem(String text);
 
-    ItemDtoForBooking getItemDtoForBooking (Long id, Long ownerId);
+    ItemDtoForBooking getItemDtoForBooking(Long id, Long ownerId);
+
     CommentDto addComment(CommentDto request, Long userId, Long itemId);
 }

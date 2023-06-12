@@ -1,7 +1,5 @@
 package ru.practicum.shareit.exception;
 
-import org.springframework.web.bind.annotation.ExceptionHandler;
-
 public class ErrorResponse {
     String error;
 

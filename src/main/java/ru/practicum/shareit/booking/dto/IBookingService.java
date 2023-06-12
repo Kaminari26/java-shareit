@@ -7,10 +7,15 @@ import java.util.List;
 
 public interface IBookingService {
     BookingDtoResponse add(BookingDto bookingDto, Long owner);
+
     BookingDtoResponse changeStatus(Long id, Boolean approved, Long userId);
+
     BookingDtoResponse getBooking(Long userId, Long bookingId);
+
     List<BookingDtoResponse> getAllByBookers(Long userId, String state);
+
     List<BookingDtoResponse> getAllByOwner(Long ownerId, String state);
+
     List<Booking> getAllByItemId(Long id);
 
     List<Booking> getAllByItemIdIn(List<Long> itemIds);

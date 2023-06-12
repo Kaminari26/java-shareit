@@ -7,7 +7,6 @@ import org.springframework.stereotype.Service;
 import ru.practicum.shareit.booking.Booking;
 import ru.practicum.shareit.booking.BookingRepository;
 import ru.practicum.shareit.booking.dto.BookingDto;
-import ru.practicum.shareit.booking.dto.BookingDtoResponse;
 import ru.practicum.shareit.booking.dto.BookingStatusEnum;
 import ru.practicum.shareit.comment.Comment;
 import ru.practicum.shareit.comment.CommentMapper;
@@ -20,7 +19,6 @@ import ru.practicum.shareit.item.dto.ItemDto;
 import ru.practicum.shareit.item.dto.ItemDtoForBooking;
 import ru.practicum.shareit.item.model.Item;
 import ru.practicum.shareit.user.IUserService;
-import ru.practicum.shareit.user.dto.UserDto;
 import ru.practicum.shareit.user.dto.UserMapper;
 import ru.practicum.shareit.user.model.User;
 
@@ -98,7 +96,7 @@ public class ItemServiceImpl implements IItemService {
                 .collect(Collectors.toList());
         List<Booking> bookingList = bookingRepository.findAllByItemIdIn(itemsId);
 
-        return list.stream().map(itemDtoForBooking -> setLastAndNext(bookingList,itemDtoForBooking)).collect(Collectors.toList());
+        return list.stream().map(itemDtoForBooking -> setLastAndNext(bookingList, itemDtoForBooking)).collect(Collectors.toList());
 
     }
 
@@ -112,12 +110,12 @@ public class ItemServiceImpl implements IItemService {
     }
 
     @Override
-    public ItemDtoForBooking getItemDtoForBooking (Long id, Long ownerId) {
+    public ItemDtoForBooking getItemDtoForBooking(Long id, Long ownerId) {
         ItemDtoForBooking itemDtoForBooking = ItemMapper.toDtoItemForBooking(repository.findById(id).orElseThrow(() ->
                 new UserNotFoundException("Предмет не найден")));
         List<Booking> bookings = bookingRepository.findAllByItemId(id);
         LocalDateTime dateTime = LocalDateTime.now();
-         bookings
+        bookings
                 .stream()
                 .sorted(Comparator.comparing(Booking::getEnd))
                 .filter(booking -> booking.getStatus().equals(BookingStatusEnum.APPROVED))
@@ -142,8 +140,8 @@ public class ItemServiceImpl implements IItemService {
                         .id(booking.getId())
                         .bookerId(booking.getBooker())
                         .build()));
-           itemDtoForBooking.setComments(commentRepository.findAllByItemId(id).stream().map(CommentMapper::mapToDto)
-                   .collect(Collectors.toList()));
+        itemDtoForBooking.setComments(commentRepository.findAllByItemId(id).stream().map(CommentMapper::mapToDto)
+                .collect(Collectors.toList()));
         return itemDtoForBooking;
     }
 
@@ -154,7 +152,7 @@ public class ItemServiceImpl implements IItemService {
         Item item = repository.findById(itemId)
                 .orElseThrow(() -> new EntityNotFoundException("предмет не найден"));
 
-        List<Booking> bookings = bookingRepository.findByItemIdAndEndIsBefore(itemId,comment.getCreated())
+        List<Booking> bookings = bookingRepository.findByItemIdAndEndIsBefore(itemId, comment.getCreated())
                 .stream()
                 .filter(booking -> Objects.equals(booking.getBooker(), userId))
                 .collect(Collectors.toList());
@@ -170,7 +168,7 @@ public class ItemServiceImpl implements IItemService {
         return CommentMapper.mapToDto(savedComment);
     }
 
-    private ItemDtoForBooking setLastAndNext (List<Booking> bookings, ItemDtoForBooking itemDtoForBooking) {
+    private ItemDtoForBooking setLastAndNext(List<Booking> bookings, ItemDtoForBooking itemDtoForBooking) {
         LocalDateTime dateTime = LocalDateTime.now();
 
         bookings

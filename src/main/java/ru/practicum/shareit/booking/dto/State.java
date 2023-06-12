@@ -10,7 +10,7 @@ public enum State {
     WAITING,
     REJECTED;
 
-    public static Optional<State> stringToState (String state) {
+    public static Optional<State> stringToState(String state) {
         for (State bookingState : values()) {
             if (bookingState.name().equalsIgnoreCase(state))
                 return Optional.of(bookingState);

@@ -2,18 +2,16 @@ package ru.practicum.shareit.booking;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Sort;
-import org.springframework.http.HttpStatus;
-import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.RestController;
 import ru.practicum.shareit.booking.dto.*;
-import ru.practicum.shareit.exception.*;
+import ru.practicum.shareit.exception.InvalidStatusException;
+import ru.practicum.shareit.exception.ItemNotAvailableException;
+import ru.practicum.shareit.exception.UserNotFoundException;
 import ru.practicum.shareit.item.IItemService;
-import ru.practicum.shareit.item.ItemService;
 import ru.practicum.shareit.item.dto.ItemDto;
 import ru.practicum.shareit.item.dto.ItemDtoForBooking;
 import ru.practicum.shareit.user.IUserService;
-import ru.practicum.shareit.user.UserService;
 import ru.practicum.shareit.user.dto.UserDto;
 
 import javax.persistence.EntityNotFoundException;
