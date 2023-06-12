@@ -4,18 +4,21 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import ru.practicum.shareit.item.dto.ItemDto;
+import ru.practicum.shareit.item.dto.ItemDtoForBooking;
 
 import javax.validation.Valid;
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
 import java.util.List;
 
 @RestController
 @Slf4j
 @RequestMapping("/items")
 public class ItemController {
-    private final ItemService itemService;
+    private final IItemService itemService;
 
     @Autowired
-    public ItemController(ItemService itemService) {
+    public ItemController(IItemService itemService) {
         this.itemService = itemService;
     }
 
@@ -38,9 +41,9 @@ public class ItemController {
     }
 
     @GetMapping("/{itemId}")
-    public ItemDto getItem(@PathVariable Long itemId) {
+    public ItemDtoForBooking getItem(@PathVariable Long itemId) {
         log.info("Запрос предмета Get " + itemId);
-        ItemDto itemDtoReady = itemService.get(itemId);
+        ItemDtoForBooking itemDtoReady = itemService.getItemDtoForBooking(itemId);
         log.info("Отправлен ответ " + itemDtoReady);
         return itemDtoReady;
     }

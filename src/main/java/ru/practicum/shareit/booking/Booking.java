@@ -1,20 +1,41 @@
 package ru.practicum.shareit.booking;
 
+import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.RequiredArgsConstructor;
+import ru.practicum.shareit.booking.dto.BookingStatusEnum;
 import ru.practicum.shareit.item.model.Item;
 import ru.practicum.shareit.user.model.User;
 
+import javax.persistence.*;
+import javax.validation.constraints.NotNull;
 import java.time.LocalDateTime;
 
-/**
- * TODO Sprint add-bookings.
- */
 @Data
+@RequiredArgsConstructor
+@AllArgsConstructor
+@Entity
+@Table(name = "bookings", schema = "public")
 public class Booking {
-    private int id;
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
+
+    @NotNull
+    @Column(name = "start_date")
     private LocalDateTime start;
+
+    @Column(name = "end_date")
+    @NotNull
     private LocalDateTime end;
-    private Item item;
-    private User booker;
-    private String status;
+
+    @Column(name = "item_id")
+    private Long itemId;
+
+    @Column(name = "booker_id")
+    private Long booker;
+
+    @Column(name = "status")
+    @Enumerated(EnumType.STRING)
+    private BookingStatusEnum status;
 }
