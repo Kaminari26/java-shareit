@@ -4,8 +4,6 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.RequiredArgsConstructor;
-import ru.practicum.shareit.item.model.Item;
-import ru.practicum.shareit.user.model.User;
 
 import javax.validation.constraints.NotNull;
 import java.time.LocalDateTime;
@@ -23,6 +21,6 @@ public class BookingDto {
     @NotNull
     private LocalDateTime end;
     private Long itemId;
-    private Long booker;
+    private Long bookerId;
     private BookingStatusEnum status;
 }

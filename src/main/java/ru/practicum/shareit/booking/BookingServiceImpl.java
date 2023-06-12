@@ -3,6 +3,7 @@ package ru.practicum.shareit.booking;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
+import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.RestController;
 import ru.practicum.shareit.booking.dto.*;
@@ -25,7 +26,7 @@ import java.util.stream.Collectors;
 @RestController()
 public class BookingServiceImpl implements IBookingService {
     private final BookingRepository repository;
-     private final IItemService itemService;
+    private final IItemService itemService;
     private final IUserService userService;
 
     @Autowired
@@ -41,7 +42,7 @@ public class BookingServiceImpl implements IBookingService {
     public BookingDtoResponse add(BookingDto bookingDto, Long owner) {
         ItemDto itemDto = itemService.get(bookingDto.getItemId());
         UserDto userDto = userService.get(owner);
-        ItemDtoForBooking itemDtoForBooking = itemService.getItemDtoForBooking(itemDto.getId());
+        ItemDtoForBooking itemDtoForBooking = itemService.getItemDtoForBooking(itemDto.getId(), owner);
         if (itemDtoForBooking.getOwner().equals(owner)) {
             throw new UserNotFoundException("Нельзя забронировать свою же вещь");
         }
@@ -76,7 +77,6 @@ public class BookingServiceImpl implements IBookingService {
         }
         repository.save(booking);
         return BookingMapper.toBookingDto(booking, userDto, itemDto);
-
     }
 
     @Override
@@ -86,7 +86,7 @@ public class BookingServiceImpl implements IBookingService {
         ItemDto itemDto = itemService.get(booking.getItemId());
 
         UserDto userDto = userService.get(booking.getBooker());
-        if (!booking.getBooker().equals(userId) && !itemService.getItemDtoForBooking(itemDto.getId()).getOwner().equals(userId)) {
+        if (!booking.getBooker().equals(userId) && !itemService.get(itemDto.getId()).getOwner().equals(userId)) {
             throw new UserNotFoundException("Не удалось получить доступ");
         }
         return BookingMapper.toBookingDto(booking, userDto, itemDto);
@@ -139,7 +139,7 @@ public class BookingServiceImpl implements IBookingService {
                 .orElseThrow(() -> new InvalidStatusException("Unknown state: " + state));
         List<Long> itemIdList = itemService.getItems(userDto.getId())
                 .stream()
-                .map(ItemDto::getId)
+                .map(ItemDtoForBooking::getId)
                 .collect(Collectors.toList());
 
         List<Booking> bookings;

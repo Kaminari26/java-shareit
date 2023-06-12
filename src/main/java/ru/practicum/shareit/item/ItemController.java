@@ -3,6 +3,7 @@ package ru.practicum.shareit.item;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
+import ru.practicum.shareit.comment.dto.CommentDto;
 import ru.practicum.shareit.item.dto.ItemDto;
 import ru.practicum.shareit.item.dto.ItemDtoForBooking;
 
@@ -41,9 +42,9 @@ public class ItemController {
     }
 
     @GetMapping("/{itemId}")
-    public ItemDtoForBooking getItem(@PathVariable Long itemId) {
+    public ItemDtoForBooking getItem(@PathVariable Long itemId, @RequestHeader(name = "X-Sharer-User-Id") long ownerId) {
         log.info("Запрос предмета Get " + itemId);
-        ItemDtoForBooking itemDtoReady = itemService.getItemDtoForBooking(itemId);
+        ItemDtoForBooking itemDtoReady = itemService.getItemDtoForBooking(itemId, ownerId);
         log.info("Отправлен ответ " + itemDtoReady);
         return itemDtoReady;
     }
@@ -55,9 +56,9 @@ public class ItemController {
     }
 
     @GetMapping
-    public List<ItemDto> getItems(@RequestHeader("X-Sharer-User-Id") Long owner) {
+    public List<ItemDtoForBooking> getItems(@RequestHeader("X-Sharer-User-Id") Long owner) {
         log.info("Список пользователей");
-        List<ItemDto> itemDtoReady = itemService.getItems(owner);
+        List<ItemDtoForBooking> itemDtoReady = itemService.getItems(owner);
         log.info("Отправлен список " + itemDtoReady);
         return itemDtoReady;
     }
@@ -68,5 +69,12 @@ public class ItemController {
         List<ItemDto> itemDtoReady = itemService.searchItem(text);
         log.info("Отправлен ответ " + itemDtoReady);
         return itemDtoReady;
+    }
+
+    @PostMapping("/{itemId}/comment")
+    public CommentDto addComment(@RequestHeader(name = "X-Sharer-User-Id") Long userId, @PathVariable Long itemId,
+                                 @Valid @RequestBody CommentDto request) {
+        log.info("Добавление комментария");
+        return itemService.addComment(request, userId, itemId);
     }
 }
