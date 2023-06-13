@@ -4,6 +4,7 @@ package ru.practicum.shareit.user;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Primary;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import ru.practicum.shareit.exception.UserNotFoundException;
 import ru.practicum.shareit.user.dto.UserDto;
 import ru.practicum.shareit.user.dto.UserMapper;
@@ -23,12 +24,14 @@ public class UserServiceImpl implements IUserService {
     }
 
     @Override
+    @Transactional
     public UserDto add(UserDto userDto) {
         User user = repository.save(UserMapper.toDtoUser(userDto));
         return UserMapper.toUserDto(user);
     }
 
     @Override
+    @Transactional
     public UserDto update(UserDto userDto, Long userId) {
         User userUpdated = UserMapper.toDtoUser(userDto);
         User user = repository.getReferenceById(userId);
@@ -43,6 +46,7 @@ public class UserServiceImpl implements IUserService {
     }
 
     @Override
+    @Transactional(readOnly = true)
     public UserDto get(Long userId) {
         User user = repository.findById(userId).orElseThrow(() -> new UserNotFoundException("Пользователь не найден"));
         return UserMapper.toUserDto(user);
@@ -50,6 +54,7 @@ public class UserServiceImpl implements IUserService {
     }
 
     @Override
+    @Transactional()
     public void deleted(Long userId) {
         repository.deleteById(userId);
     }
