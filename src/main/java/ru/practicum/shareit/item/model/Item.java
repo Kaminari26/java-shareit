@@ -18,10 +18,14 @@ public class Item {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     @NotBlank
+    @Column(name = "name")
     private String name;
     @NotNull
+    @Column(name = "description")
     private String description;
     @NotNull
+    @Column(name = "is_available")
     private Boolean available;
+    @Column(name = "owner_id")
     private Long owner;
 }
