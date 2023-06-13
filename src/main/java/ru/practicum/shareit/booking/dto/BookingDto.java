@@ -4,6 +4,7 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.RequiredArgsConstructor;
+import ru.practicum.shareit.booking.BookingStatusEnum;
 
 import javax.validation.constraints.NotNull;
 import java.time.LocalDateTime;

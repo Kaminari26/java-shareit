@@ -3,7 +3,6 @@ package ru.practicum.shareit.booking;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
-import ru.practicum.shareit.booking.dto.BookingStatusEnum;
 
 import java.time.LocalDateTime;
 import java.util.List;

@@ -1,6 +1,7 @@
-package ru.practicum.shareit.booking.dto;
+package ru.practicum.shareit.booking;
 
-import ru.practicum.shareit.booking.Booking;
+import ru.practicum.shareit.booking.dto.BookingDto;
+import ru.practicum.shareit.booking.dto.BookingDtoResponse;
 
 import java.time.LocalDateTime;
 import java.util.List;
