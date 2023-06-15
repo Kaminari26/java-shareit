@@ -6,15 +6,18 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.RestController;
 import ru.practicum.shareit.booking.dto.BookingDto;
 import ru.practicum.shareit.booking.dto.BookingDtoResponse;
-import ru.practicum.shareit.booking.dto.BookingMapper;
+import ru.practicum.shareit.booking.mapper.BookingMapper;
+import ru.practicum.shareit.booking.model.Booking;
 import ru.practicum.shareit.exception.InvalidStatusException;
 import ru.practicum.shareit.exception.ItemNotAvailableException;
 import ru.practicum.shareit.exception.UserNotFoundException;
 import ru.practicum.shareit.item.IItemService;
+import ru.practicum.shareit.item.ItemMapper.ItemMapper;
 import ru.practicum.shareit.item.dto.ItemDto;
 import ru.practicum.shareit.item.dto.ItemDtoForBooking;
 import ru.practicum.shareit.user.IUserService;
 import ru.practicum.shareit.user.dto.UserDto;
+import ru.practicum.shareit.user.mapper.UserMapper;
 
 import javax.persistence.EntityNotFoundException;
 import java.time.LocalDateTime;
@@ -49,7 +52,9 @@ public class BookingServiceImpl implements IBookingService {
         if (itemDto.getAvailable() && bookingDto.getStart().isBefore(bookingDto.getEnd()) && bookingDto.getStart().isAfter(LocalDateTime.now())) {
 
             Booking booking = BookingMapper.toBookingDto(bookingDto);
-            booking.setBooker(owner);
+            booking.setBooker(UserMapper.toDtoUser(userService.get(owner)));
+            booking.setItem(ItemMapper.toDtoItem(itemService.get(bookingDto.getItemId()), owner));
+            booking.setBooker(UserMapper.toDtoUser(userService.get(owner)));
             booking.setStatus(BookingStatusEnum.WAITING);
             repository.save(booking);
             return BookingMapper.toBookingDto(booking, userDto, itemDto);
@@ -61,8 +66,8 @@ public class BookingServiceImpl implements IBookingService {
     public BookingDtoResponse changeStatus(Long id, Boolean approved, Long userId) {
         Booking booking = repository.findById(id)
                 .orElseThrow(() -> new EntityNotFoundException("Букинг не найден, не удалось изменить статус"));
-        ItemDto itemDto = itemService.get(booking.getItemId());
-        UserDto userDto = userService.get(booking.getBooker());
+        ItemDto itemDto = ItemMapper.toItemDto(booking.getItem());
+        UserDto userDto = userService.get(booking.getBooker().getId());
         if (userDto.getId().equals(userId)) {
             throw new UserNotFoundException("Нет доступа к букингу.");
 
@@ -83,10 +88,10 @@ public class BookingServiceImpl implements IBookingService {
     public BookingDtoResponse getBooking(Long userId, Long bookingId) {
         Booking booking = repository.findById(bookingId).orElseThrow(() ->
                 new UserNotFoundException("Букинг не найден"));
-        ItemDto itemDto = itemService.get(booking.getItemId());
+        ItemDto itemDto = ItemMapper.toItemDto(booking.getItem());
 
-        UserDto userDto = userService.get(booking.getBooker());
-        if (!booking.getBooker().equals(userId) && !itemService.get(itemDto.getId()).getOwner().equals(userId)) {
+        UserDto userDto = userService.get(booking.getBooker().getId());
+        if (!booking.getBooker().getId().equals(userId) && !itemService.get(itemDto.getId()).getOwner().equals(userId)) {
             throw new UserNotFoundException("Не удалось получить доступ");
         }
         return BookingMapper.toBookingDto(booking, userDto, itemDto);
@@ -103,29 +108,29 @@ public class BookingServiceImpl implements IBookingService {
 
         switch (bookingState) {
             case ALL:
-                bookings = repository.findAllByBooker(userId, sort);
+                bookings = repository.findAllByBookerId(userId, sort);
                 break;
             case CURRENT:
-                bookings = repository.findByBookerAndStartIsBeforeAndEndIsAfter(userId, dateNow, dateNow, sort);
+                bookings = repository.findByBookerIdAndStartIsBeforeAndEndIsAfter(userId, dateNow, dateNow, sort);
                 break;
             case PAST:
-                bookings = repository.findByBookerAndEndIsBefore(userId, dateNow, sort);
+                bookings = repository.findByBookerIdAndEndIsBefore(userId, dateNow, sort);
                 break;
             case FUTURE:
-                bookings = repository.findByBookerAndStartIsAfter(userId, dateNow, sort);
+                bookings = repository.findByBookerIdAndStartIsAfter(userId, dateNow, sort);
                 break;
             case WAITING:
-                bookings = repository.findByBookerAndStartIsAfterAndStatusIs(userId, dateNow, sort, BookingStatusEnum.WAITING);
+                bookings = repository.findByBookerIdAndStartIsAfterAndStatusIs(userId, dateNow, sort, BookingStatusEnum.WAITING);
                 break;
             case REJECTED:
-                bookings = repository.findByBookerAndStartIsAfterAndStatusIs(userId, dateNow, sort, BookingStatusEnum.REJECTED);
+                bookings = repository.findByBookerIdAndStartIsAfterAndStatusIs(userId, dateNow, sort, BookingStatusEnum.REJECTED);
                 break;
             default:
                 return List.of();
         }
         List<BookingDtoResponse> bookingDtoResponse = new ArrayList<>();
         for (Booking bok : bookings) {
-            bookingDtoResponse.add(BookingMapper.toBookingDto(bok, userService.get(bok.getBooker()), itemService.get(bok.getItemId())));
+            bookingDtoResponse.add(BookingMapper.toBookingDto(bok, userService.get(bok.getBooker().getId()), itemService.get(bok.getItem().getId())));
         }
         return bookingDtoResponse;
     }
@@ -167,7 +172,7 @@ public class BookingServiceImpl implements IBookingService {
         }
         List<BookingDtoResponse> bookingDtoResponse = new ArrayList<>();
         for (Booking bok : bookings) {
-            bookingDtoResponse.add(BookingMapper.toBookingDto(bok, userService.get(bok.getBooker()), itemService.get(bok.getItemId())));
+            bookingDtoResponse.add(BookingMapper.toBookingDto(bok, userService.get(bok.getBooker().getId()), itemService.get(bok.getItem().getId())));
         }
         return bookingDtoResponse;
     }

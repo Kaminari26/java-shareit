@@ -5,14 +5,14 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Primary;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import ru.practicum.shareit.booking.Booking;
 import ru.practicum.shareit.booking.BookingRepository;
 import ru.practicum.shareit.booking.BookingStatusEnum;
 import ru.practicum.shareit.booking.dto.BookingDto;
+import ru.practicum.shareit.booking.model.Booking;
 import ru.practicum.shareit.comment.Comment;
-import ru.practicum.shareit.comment.CommentMapper;
 import ru.practicum.shareit.comment.CommentRepository;
 import ru.practicum.shareit.comment.dto.CommentDto;
+import ru.practicum.shareit.comment.mapper.CommentMapper;
 import ru.practicum.shareit.exception.InvalidStatusException;
 import ru.practicum.shareit.exception.UserNotFoundException;
 import ru.practicum.shareit.item.ItemMapper.ItemMapper;
@@ -20,7 +20,7 @@ import ru.practicum.shareit.item.dto.ItemDto;
 import ru.practicum.shareit.item.dto.ItemDtoForBooking;
 import ru.practicum.shareit.item.model.Item;
 import ru.practicum.shareit.user.IUserService;
-import ru.practicum.shareit.user.dto.UserMapper;
+import ru.practicum.shareit.user.mapper.UserMapper;
 import ru.practicum.shareit.user.model.User;
 
 import javax.persistence.EntityNotFoundException;
@@ -127,7 +127,7 @@ public class ItemServiceImpl implements IItemService {
 
         List<Booking> bookings = bookingRepository.findByItemIdAndEndIsBefore(itemId, comment.getCreated())
                 .stream()
-                .filter(booking -> Objects.equals(booking.getBooker(), userId))
+                .filter(booking -> Objects.equals(booking.getBooker().getId(), userId))
                 .collect(Collectors.toList());
 
         if (bookings.isEmpty()) {
@@ -136,6 +136,7 @@ public class ItemServiceImpl implements IItemService {
 
         comment.setAuthor(author);
         comment.setItem(item);
+
         Comment savedComment = commentRepository.save(comment);
 
         return CommentMapper.mapToDto(savedComment);
@@ -146,29 +147,29 @@ public class ItemServiceImpl implements IItemService {
         LocalDateTime dateTime = LocalDateTime.now();
         bookings
                 .stream()
-                .filter(booking -> Objects.equals(booking.getItemId(), itemDtoForBooking.getId()))
+                .filter(booking -> Objects.equals(booking.getItem().getId(), itemDtoForBooking.getId()))
                 .sorted(Comparator.comparing(Booking::getEnd).reversed())
                 .filter(booking -> booking.getStatus().equals(BookingStatusEnum.APPROVED))
                 .filter(booking -> booking.getStart().isBefore(dateTime))
-                .filter(ItemDtoForBooking -> itemDtoForBooking.getOwner().equals(ownerId)).filter(booking -> booking.getItemId().equals(itemDtoForBooking.getId()))
+                .filter(ItemDtoForBooking -> itemDtoForBooking.getOwner().equals(ownerId)).filter(booking -> booking.getItem().getId().equals(itemDtoForBooking.getId()))
                 .limit(1)
                 .findAny()
                 .ifPresent(booking -> itemDtoForBooking.setLastBooking(BookingDto.builder()
                         .id(booking.getId())
-                        .bookerId(booking.getBooker())
+                        .bookerId(booking.getBooker().getId())
                         .build()));
         bookings
                 .stream()
-                .filter(booking -> Objects.equals(booking.getItemId(), itemDtoForBooking.getId()))
+                .filter(booking -> Objects.equals(booking.getItem().getId(), itemDtoForBooking.getId()))
                 .sorted(Comparator.comparing(Booking::getStart))
                 .filter(booking -> booking.getStatus().equals(BookingStatusEnum.APPROVED))
                 .filter(booking -> booking.getStart().isAfter(dateTime))
-                .filter(ItemDtoForBooking -> itemDtoForBooking.getOwner().equals(ownerId)).filter(booking -> booking.getItemId().equals(itemDtoForBooking.getId()))
+                .filter(ItemDtoForBooking -> itemDtoForBooking.getOwner().equals(ownerId)).filter(booking -> booking.getItem().getId().equals(itemDtoForBooking.getId()))
                 .limit(1)
                 .findAny()
                 .ifPresent(booking -> itemDtoForBooking.setNextBooking(BookingDto.builder()
                         .id(booking.getId())
-                        .bookerId(booking.getBooker())
+                        .bookerId(booking.getBooker().getId())
                         .build()));
         return itemDtoForBooking;
     }

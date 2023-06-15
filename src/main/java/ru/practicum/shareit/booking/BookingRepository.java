@@ -3,21 +3,22 @@ package ru.practicum.shareit.booking;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
+import ru.practicum.shareit.booking.model.Booking;
 
 import java.time.LocalDateTime;
 import java.util.List;
 
 @Repository
 public interface BookingRepository extends JpaRepository<Booking, Long> {
-    List<Booking> findAllByBooker(Long booker, Sort sort);
+    List<Booking> findAllByBookerId(Long booker, Sort sort);
 
-    List<Booking> findByBookerAndEndIsBefore(Long booker, LocalDateTime end, Sort sort);
+    List<Booking> findByBookerIdAndEndIsBefore(Long booker, LocalDateTime end, Sort sort);
 
-    List<Booking> findByBookerAndStartIsBeforeAndEndIsAfter(Long bookerId, LocalDateTime start, LocalDateTime end, Sort sort);
+    List<Booking> findByBookerIdAndStartIsBeforeAndEndIsAfter(Long bookerId, LocalDateTime start, LocalDateTime end, Sort sort);
 
-    List<Booking> findByBookerAndStartIsAfter(Long bookerId, LocalDateTime start, Sort sort);
+    List<Booking> findByBookerIdAndStartIsAfter(Long bookerId, LocalDateTime start, Sort sort);
 
-    List<Booking> findByBookerAndStartIsAfterAndStatusIs(Long userId, LocalDateTime date, Sort sort, BookingStatusEnum bookingStatus);
+    List<Booking> findByBookerIdAndStartIsAfterAndStatusIs(Long userId, LocalDateTime date, Sort sort, BookingStatusEnum bookingStatus);
 
     List<Booking> findAllByItemId(Long id);
 
