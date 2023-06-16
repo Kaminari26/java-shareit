@@ -3,9 +3,11 @@ package ru.practicum.shareit.item;
 import lombok.SneakyThrows;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import ru.practicum.shareit.comment.dto.CommentDto;
 import ru.practicum.shareit.exception.UserNotFoundException;
 import ru.practicum.shareit.item.ItemMapper.ItemMapper;
 import ru.practicum.shareit.item.dto.ItemDto;
+import ru.practicum.shareit.item.dto.ItemDtoForBooking;
 import ru.practicum.shareit.item.model.Item;
 import ru.practicum.shareit.user.IUserService;
 
@@ -27,7 +29,7 @@ public class ItemService implements IItemService {
     @Override
     @SneakyThrows
     public ItemDto add(ItemDto itemDto, Long owner) {
-        Item item = (ItemMapper.toDtoItem(itemDto, owner));
+        Item item = ItemMapper.toDtoItem(itemDto, owner);
         if (iUserService.get(item.getOwner()) == null) {
             throw new UserNotFoundException("Пользователь не найден");
         }
@@ -72,11 +74,11 @@ public class ItemService implements IItemService {
     }
 
     @Override
-    public List<ItemDto> getItems(Long userId) {
+    public List<ItemDtoForBooking> getItems(Long userId) {
         List<Item> allItems = itemStorage.getItems(userId);
-        List<ItemDto> itemDtos = new ArrayList<>();
+        List<ItemDtoForBooking> itemDtos = new ArrayList<>();
         for (Item item : allItems) {
-            itemDtos.add(ItemMapper.toItemDto(item));
+            itemDtos.add(ItemMapper.toDtoItemForBooking(item));
         }
         return itemDtos;
     }
@@ -94,5 +96,15 @@ public class ItemService implements IItemService {
             throw new NoSuchElementException("Предметы не найдены");
         }
         return searchDto;
+    }
+
+    @Override
+    public ItemDtoForBooking getItemDtoForBooking(Long id, Long ownerId) {
+        return null;
+    }
+
+    @Override
+    public CommentDto addComment(CommentDto request, Long userId, Long itemId) {
+        return null;
     }
 }
