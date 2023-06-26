@@ -1,5 +1,6 @@
 package ru.practicum.shareit.booking;
 
+import com.sun.nio.sctp.IllegalReceiveException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -7,6 +8,8 @@ import ru.practicum.shareit.booking.dto.BookingDto;
 import ru.practicum.shareit.booking.dto.BookingDtoResponse;
 
 import javax.validation.Valid;
+import javax.validation.constraints.Positive;
+import javax.validation.constraints.PositiveOrZero;
 import java.util.List;
 
 @RestController
@@ -50,13 +53,23 @@ public class BookingController {
 
     @GetMapping
     public List<BookingDtoResponse> getBookingsByBooker(@RequestHeader(name = "X-Sharer-User-Id") Long userId,
-                                                        @RequestParam(name = "state", defaultValue = "ALL") String state) {
-        return bookingService.getAllByBookers(userId, state);
+                                                        @RequestParam(name = "state", defaultValue = "ALL") String state,
+                                                        @RequestParam(value = "from", defaultValue = "0", required = false) @PositiveOrZero Integer from,
+                                                        @RequestParam(value = "size", defaultValue = "10", required = false) @Positive Integer size) {
+        if (size <= 0 || from < 0) {
+            throw new IllegalReceiveException("Неверно указан параметр");
+        }
+
+        return bookingService.getAllByBookers(userId, state, from, size);
     }
 
     @GetMapping("/owner")
     public List<BookingDtoResponse> getBookingsByOwner(@RequestHeader(name = "X-Sharer-User-Id") Long userId,
-                                                       @RequestParam(name = "state", defaultValue = "ALL") String state) {
-        return bookingService.getAllByOwner(userId, state);
+                                                       @RequestParam(name = "state", defaultValue = "ALL") String state, @RequestParam(value = "from", defaultValue = "0", required = false) @PositiveOrZero Integer from,
+                                                       @RequestParam(value = "size", defaultValue = "10", required = false) @Positive Integer size) {
+        if (size <= 0 || from < 0) {
+            throw new IllegalReceiveException("Неверно указан параметр");
+        }
+        return bookingService.getAllByOwner(userId, state, from, size);
     }
 }

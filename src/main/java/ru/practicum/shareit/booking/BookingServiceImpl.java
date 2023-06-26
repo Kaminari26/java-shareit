@@ -1,6 +1,8 @@
 package ru.practicum.shareit.booking;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.RestController;
@@ -86,10 +88,8 @@ public class BookingServiceImpl implements IBookingService {
 
     @Override
     public BookingDtoResponse getBooking(Long userId, Long bookingId) {
-        Booking booking = repository.findById(bookingId).orElseThrow(() ->
-                new UserNotFoundException("Букинг не найден"));
+        Booking booking = repository.findById(bookingId).orElseThrow(() -> new UserNotFoundException("Букинг не найден"));
         ItemDto itemDto = ItemMapper.toItemDto(booking.getItem());
-
         UserDto userDto = userService.get(booking.getBooker().getId());
         if (!booking.getBooker().getId().equals(userId) && !itemService.get(itemDto.getId()).getOwner().equals(userId)) {
             throw new UserNotFoundException("Не удалось получить доступ");
@@ -98,8 +98,14 @@ public class BookingServiceImpl implements IBookingService {
     }
 
     @Override
-    public List<BookingDtoResponse> getAllByBookers(Long userId, String state) {
+    public List<BookingDtoResponse> getAllByBookers(Long userId, String state, Integer from, Integer size) {
         UserDto userDto = userService.get(userId);
+        int page = 0;
+        if (from != 0) {
+            page = from / size;
+        }
+        Pageable pageable = PageRequest.of(page, size, Sort.by("start").descending());
+
         LocalDateTime dateNow = LocalDateTime.now();
         Sort sort = Sort.by("start").descending();
         State bookingState = State.stringToState(state)
@@ -108,7 +114,7 @@ public class BookingServiceImpl implements IBookingService {
 
         switch (bookingState) {
             case ALL:
-                bookings = repository.findAllByBookerId(userId, sort);
+                bookings = repository.findAllByBookerId(userId, pageable);
                 break;
             case CURRENT:
                 bookings = repository.findByBookerIdAndStartIsBeforeAndEndIsAfter(userId, dateNow, dateNow, sort);
@@ -122,11 +128,9 @@ public class BookingServiceImpl implements IBookingService {
             case WAITING:
                 bookings = repository.findByBookerIdAndStartIsAfterAndStatusIs(userId, dateNow, sort, BookingStatusEnum.WAITING);
                 break;
-            case REJECTED:
+            default:
                 bookings = repository.findByBookerIdAndStartIsAfterAndStatusIs(userId, dateNow, sort, BookingStatusEnum.REJECTED);
                 break;
-            default:
-                return List.of();
         }
         List<BookingDtoResponse> bookingDtoResponse = new ArrayList<>();
         for (Booking bok : bookings) {
@@ -136,7 +140,13 @@ public class BookingServiceImpl implements IBookingService {
     }
 
     @Override
-    public List<BookingDtoResponse> getAllByOwner(Long ownerId, String state) {
+    public List<BookingDtoResponse> getAllByOwner(Long ownerId, String state, Integer from, Integer size) {
+        int page = 0;
+        if (from != 0) {
+            page = from / size;
+        }
+        Pageable pageable = PageRequest.of(page, size, Sort.by("start").descending());
+
         UserDto userDto = userService.get(ownerId);
         LocalDateTime dateNow = LocalDateTime.now();
         Sort sort = Sort.by("start").descending();
@@ -150,7 +160,7 @@ public class BookingServiceImpl implements IBookingService {
         List<Booking> bookings;
         switch (bookingState) {
             case ALL:
-                bookings = repository.findAllByItemIdIn(itemIdList, sort);
+                bookings = repository.findAllByItemIdIn(itemIdList, pageable);
                 break;
             case CURRENT:
                 bookings = repository.findByItemIdInAndStartIsBeforeAndEndIsAfter(itemIdList, dateNow, dateNow, sort);
@@ -164,11 +174,9 @@ public class BookingServiceImpl implements IBookingService {
             case WAITING:
                 bookings = repository.findByItemIdInAndStartIsAfterAndStatusIs(itemIdList, dateNow, sort, BookingStatusEnum.WAITING);
                 break;
-            case REJECTED:
+            default:
                 bookings = repository.findByItemIdInAndStartIsAfterAndStatusIs(itemIdList, dateNow, sort, BookingStatusEnum.REJECTED);
                 break;
-            default:
-                return List.of();
         }
         List<BookingDtoResponse> bookingDtoResponse = new ArrayList<>();
         for (Booking bok : bookings) {

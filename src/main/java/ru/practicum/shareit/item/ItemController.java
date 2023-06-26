@@ -22,7 +22,8 @@ public class ItemController {
     }
 
     @PostMapping
-    public ItemDto createItem(@Valid @RequestBody ItemDto itemDto, @RequestHeader("X-Sharer-User-Id") Long owner) {
+    public ItemDto createItem(@Valid @RequestBody ItemDto itemDto,
+                              @RequestHeader("X-Sharer-User-Id") Long owner) {
         log.info("Пришел запрос Post /items");
         ItemDto itemDtoReady = itemService.add(itemDto, owner);
         log.info("Отправлен ответ " + itemDtoReady);
