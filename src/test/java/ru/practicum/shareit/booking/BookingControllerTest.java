@@ -67,7 +67,7 @@ class BookingControllerTest {
                 .thenReturn(bookingDtoResponse);
 
         mockMvc.perform(post("/bookings")
-                        .header(userHeader, 1)
+                        .header(userHeader, 1L)
                         .param("from", "1")
                         .param("size", "1")
                         .param("state", "ALL")
@@ -87,8 +87,8 @@ class BookingControllerTest {
                 .thenReturn(bookingDtoResponse);
 
         bookingDto.setStatus(BookingStatusEnum.APPROVED);
-        mockMvc.perform(patch("/bookings/{bookingId}", 1)
-                        .header(userHeader, 1)
+        mockMvc.perform(patch("/bookings/{bookingId}", 1L)
+                        .header(userHeader, 1L)
                         .param("approved", "true")
                         .content(mapper.writeValueAsString(bookingDtoResponse))
                         .characterEncoding(StandardCharsets.UTF_8)
@@ -106,8 +106,8 @@ class BookingControllerTest {
                 .thenReturn(bookingDtoResponse);
 
         bookingDto.setStatus(BookingStatusEnum.APPROVED);
-        mockMvc.perform(get("/bookings/{bookingId}", 1)
-                        .header(userHeader, 1)
+        mockMvc.perform(get("/bookings/{bookingId}", 1L)
+                        .header(userHeader, 1L)
                         .param("approved", "true")
                         .content(mapper.writeValueAsString(bookingDtoResponse))
                         .characterEncoding(StandardCharsets.UTF_8)
@@ -125,7 +125,7 @@ class BookingControllerTest {
                 .thenReturn(List.of(bookingDtoResponse));
 
         mockMvc.perform(get("/bookings/owner")
-                        .header(userHeader, 1)
+                        .header(userHeader, 1L)
                         .param("from", "1")
                         .param("size", "1")
                         .param("state", "ALL")
@@ -159,7 +159,7 @@ class BookingControllerTest {
                 .thenReturn(List.of(bookingDtoResponse));
 
         mockMvc.perform(get("/bookings")
-                        .header(userHeader, 1)
+                        .header(userHeader, 1L)
                         .param("from", "1")
                         .param("size", "1")
                         .param("state", "ALL")

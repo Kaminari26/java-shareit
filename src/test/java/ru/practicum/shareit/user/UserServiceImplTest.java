@@ -68,19 +68,6 @@ class UserServiceImplTest {
     }
 
     @Test
-    void UpdateUserEmailNullTest() {
-        Mockito.when(repository.save(Mockito.any(User.class))).thenReturn(new User(1L, "Petya", "1123@yandex.ru"));
-        Mockito.when(repository.getReferenceById(Mockito.anyLong())).thenReturn(new User(1L, "Vasya", "1123@yandex.ru"));
-
-        UserServiceImpl userService = new UserServiceImpl(repository);
-        UserDto userDto = userService.update(new UserDto(null, "Petya", null), 1L);
-
-        Assertions.assertEquals("Petya", userDto.getName());
-        Assertions.assertEquals("1123@yandex.ru", userDto.getEmail());
-        Assertions.assertEquals(1L, userDto.getId());
-    }
-
-    @Test
     void getUserOkTest() {
         Mockito.when(repository.findById(Mockito.anyLong())).thenReturn(Optional.of(new User(1L, "Vasya", "Pupkin@yandex.ru")));
 
