@@ -69,12 +69,12 @@ class UserServiceImplTest {
 
     @Test
     void getUserThrowTest() {
-        Mockito.when(repository.findById(Mockito.anyLong())).thenThrow(new UserNotFoundException("Пользователь не найден"));
+        Mockito.when(repository.findById(Mockito.anyLong())).thenThrow(new UserNotFoundException("РџРѕР»СЊР·РѕРІР°С‚РµР»СЊ РЅРµ РЅР°Р№РґРµРЅ"));
         UserServiceImpl userService = new UserServiceImpl(repository);
 
         final UserNotFoundException exception = Assertions.assertThrows(UserNotFoundException.class, () -> userService.get(555L));
 
-        Assertions.assertEquals("Пользователь не найден", exception.getMessage());
+        Assertions.assertEquals("РџРѕР»СЊР·РѕРІР°С‚РµР»СЊ РЅРµ РЅР°Р№РґРµРЅ", exception.getMessage());
     }
 
     @Test
