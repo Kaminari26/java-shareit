@@ -55,6 +55,7 @@ class BookingServiceImplTest {
         LocalDateTime localDateTimeStart = LocalDateTime.now();
         LocalDateTime localDateTimeFinish = LocalDateTime.now().plusDays(2L);
         Mockito.when(userService.get(Mockito.anyLong())).thenReturn(new UserDto(1L, "Pupkin", "PupkinDestroyer@gmail.com"));
+        Mockito.when(userService.get(Mockito.anyLong())).thenReturn(new UserDto(1L, "Pupkin", "PupkinDestroyer@gmail.com"));
         Mockito.when(itemService.get(Mockito.anyLong())).thenReturn(new ItemDto(1L, "GameBoy", "help me", true, 1L, 1L));
         Mockito.when(itemService.getItemDtoForBooking(Mockito.anyLong(), Mockito.anyLong())).thenReturn(new ItemDtoForBooking(1L, "game", "videogame", true, 1L, null, null, null));
 
@@ -72,7 +73,7 @@ class BookingServiceImplTest {
         Mockito.when(itemService.getItemDtoForBooking(Mockito.anyLong(), Mockito.anyLong())).thenReturn(new ItemDtoForBooking(1L, "game", "videogame", true, 1L, null, null, null));
 
         BookingServiceImpl bookingService = new BookingServiceImpl(repository, itemService, userService);
-        final ItemNotAvailableException exception = assertThrows(ItemNotAvailableException.class, () -> bookingService.add(new BookingDto(null, localDateTimeStart, localDateTimeFinish, 1L, 1L, BookingStatusEnum.WAITING), 3L));
+        final ItemNotAvailableException exception = assertThrows(ItemNotAvailableException.class, () -> bookingService.add(BookingDto.builder().id(null).start(localDateTimeStart).end(localDateTimeFinish).itemId(1L).bookerId(1L).status(BookingStatusEnum.WAITING).build(), 3L));
         Assertions.assertEquals("Предмет недоступен", exception.getMessage());
     }
 

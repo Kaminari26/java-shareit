@@ -12,8 +12,6 @@ import javax.validation.constraints.NotNull;
 import java.time.LocalDateTime;
 
 @Data
-@RequiredArgsConstructor
-@Builder
 @AllArgsConstructor
 public class BookingDtoResponse {
 
