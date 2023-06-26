@@ -35,7 +35,7 @@ class CommentServiceImplTest {
         LocalDateTime localDateTime = LocalDateTime.now();
         User author = new User(1L, "Petya", "Pupok21rus@yandex.ru");
         Item item = new Item(1L, "name", "discription", true, 1L, 1L);
-        Mockito.when(repository.save(Mockito.any(Comment.class))).thenReturn(new Comment(1L, "tz so hard", item, author, localDateTime));
+        Mockito.when(repository.save(Mockito.any(Comment.class))).thenReturn(Comment.builder().id(1L).text("tz so hard").item(item).author(author).created(localDateTime).build());
 
         CommentServiceImpl commentService = new CommentServiceImpl(repository);
 
