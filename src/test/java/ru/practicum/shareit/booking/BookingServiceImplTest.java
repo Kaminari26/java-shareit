@@ -55,7 +55,7 @@ class BookingServiceImplTest {
         LocalDateTime localDateTimeStart = LocalDateTime.now();
         LocalDateTime localDateTimeFinish = LocalDateTime.now().plusDays(2L);
         Mockito.when(userService.get(Mockito.anyLong())).thenReturn(new UserDto(1L, "Pupkin", "PupkinDestroyer@gmail.com"));
-        Mockito.when(itemService.get(Mockito.anyLong())).thenReturn(new ItemDto(1l, "GameBoy", "help me", true, 1L, 1L));
+        Mockito.when(itemService.get(Mockito.anyLong())).thenReturn(new ItemDto(1L, "GameBoy", "help me", true, 1L, 1L));
         Mockito.when(itemService.getItemDtoForBooking(Mockito.anyLong(), Mockito.anyLong())).thenReturn(new ItemDtoForBooking(1L, "game", "videogame", true, 1L, null, null, null));
 
         BookingServiceImpl bookingService = new BookingServiceImpl(repository, itemService, userService);
@@ -68,7 +68,7 @@ class BookingServiceImplTest {
         LocalDateTime localDateTimeStart = LocalDateTime.now();
         LocalDateTime localDateTimeFinish = LocalDateTime.now().plusDays(2L);
         Mockito.when(userService.get(Mockito.anyLong())).thenReturn(new UserDto(3L, "Pupkin", "PupkinDestroyer@gmail.com"));
-        Mockito.when(itemService.get(Mockito.anyLong())).thenReturn(new ItemDto(1l, "GameBoy", "help me", true, 2L, 1L));
+        Mockito.when(itemService.get(Mockito.anyLong())).thenReturn(new ItemDto(1L, "GameBoy", "help me", true, 2L, 1L));
         Mockito.when(itemService.getItemDtoForBooking(Mockito.anyLong(), Mockito.anyLong())).thenReturn(new ItemDtoForBooking(1L, "game", "videogame", true, 1L, null, null, null));
 
         BookingServiceImpl bookingService = new BookingServiceImpl(repository, itemService, userService);
@@ -81,7 +81,7 @@ class BookingServiceImplTest {
         LocalDateTime localDateTimeStart = LocalDateTime.now();
         LocalDateTime localDateTimeFinish = LocalDateTime.now().plusDays(2L);
         Mockito.when(userService.get(Mockito.anyLong())).thenReturn(new UserDto(3L, "Pupkin", "PupkinDestroyer@gmail.com"));
-        Mockito.when(itemService.get(Mockito.anyLong())).thenReturn(new ItemDto(1l, "GameBoy", "help me", true, 2L, 1L));
+        Mockito.when(itemService.get(Mockito.anyLong())).thenReturn(new ItemDto(1L, "GameBoy", "help me", true, 2L, 1L));
         Mockito.when(itemService.getItemDtoForBooking(Mockito.anyLong(), Mockito.anyLong())).thenReturn(new ItemDtoForBooking(1L, "game", "videogame", true, 1L, null, null, null));
 
         BookingServiceImpl bookingService = new BookingServiceImpl(repository, itemService, userService);
@@ -94,7 +94,7 @@ class BookingServiceImplTest {
         LocalDateTime localDateTimeStart = LocalDateTime.now().minusDays(1L);
         LocalDateTime localDateTimeFinish = LocalDateTime.now().plusDays(2L);
         Mockito.when(userService.get(Mockito.anyLong())).thenReturn(new UserDto(3L, "Pupkin", "PupkinDestroyer@gmail.com"));
-        Mockito.when(itemService.get(Mockito.anyLong())).thenReturn(new ItemDto(1l, "GameBoy", "help me", true, 2L, 1L));
+        Mockito.when(itemService.get(Mockito.anyLong())).thenReturn(new ItemDto(1L, "GameBoy", "help me", true, 2L, 1L));
         Mockito.when(itemService.getItemDtoForBooking(Mockito.anyLong(), Mockito.anyLong())).thenReturn(new ItemDtoForBooking(1L, "game", "videogame", true, 1L, null, null, null));
 
         BookingServiceImpl bookingService = new BookingServiceImpl(repository, itemService, userService);
@@ -107,7 +107,7 @@ class BookingServiceImplTest {
         LocalDateTime localDateTimeStart = LocalDateTime.now().plusDays(1L);
         LocalDateTime localDateTimeFinish = LocalDateTime.now().plusDays(2L);
         Mockito.when(userService.get(Mockito.anyLong())).thenReturn(new UserDto(3L, "Pupkin", "PupkinDestroyer@gmail.com"));
-        Mockito.when(itemService.get(Mockito.anyLong())).thenReturn(new ItemDto(1l, "GameBoy", "help me", true, 2L, 1L));
+        Mockito.when(itemService.get(Mockito.anyLong())).thenReturn(new ItemDto(1L, "GameBoy", "help me", true, 2L, 1L));
         Mockito.when(itemService.getItemDtoForBooking(Mockito.anyLong(), Mockito.anyLong())).thenReturn(new ItemDtoForBooking(1L, "game", "videogame", true, 1L, null, null, null));
 
         BookingServiceImpl bookingService = new BookingServiceImpl(repository, itemService, userService);
