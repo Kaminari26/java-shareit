@@ -138,6 +138,7 @@ class BookingControllerTest {
                 .andExpect(jsonPath("$[0].id", is(bookingDtoResponse.getId()), Long.class))
                 .andExpect(jsonPath("$[0].status", is(bookingDtoResponse.getStatus().toString())));
     }
+
     @Test
     void getBookingsByBooker() throws Exception {
         when(bookingService.getAllByBookers(anyLong(), anyString(), anyInt(), anyInt()))
