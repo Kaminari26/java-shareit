@@ -213,7 +213,7 @@ class BookingServiceImplTest {
         Item item = new Item(1L, "GameBoy", "help me", true, 1L, 1L);
         Mockito.when(repository.findById(Mockito.anyLong())).thenReturn(Optional.of(new Booking(1L, localDateTimeStart, localDateTimeFinish, item, booker, BookingStatusEnum.WAITING)));
         Mockito.when(userService.get(Mockito.anyLong())).thenReturn(bookerDto);
-        Mockito.when(itemService.get(Mockito.anyLong())).thenReturn(new ItemDto(1l, "asd", "asds", true, 1L, 1L));
+        Mockito.when(itemService.get(Mockito.anyLong())).thenReturn(new ItemDto(1L, "asd", "asds", true, 1L, 1L));
 
         BookingServiceImpl bookingService = new BookingServiceImpl(repository, itemService, userService);
         UserNotFoundException exception = assertThrows(UserNotFoundException.class, () -> bookingService.getBooking(9L, 1L));

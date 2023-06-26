@@ -55,7 +55,7 @@ class UserServiceImplTest {
     }
 
     @Test
-    void UpdateUserNameNullTest() {
+    void UpdateUserNullTest() {
         Mockito.when(repository.save(Mockito.any(User.class))).thenReturn(new User(1L, "Vasya", "1123@yandex.ru"));
         Mockito.when(repository.getReferenceById(Mockito.anyLong())).thenReturn(new User(1L, "Vasya", "Pupkin@yandex.ru"));
 
