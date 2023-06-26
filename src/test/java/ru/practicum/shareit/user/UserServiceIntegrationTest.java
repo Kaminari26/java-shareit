@@ -8,9 +8,6 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.dao.DataIntegrityViolationException;
 import ru.practicum.shareit.exception.UserNotFoundException;
 import ru.practicum.shareit.user.dto.UserDto;
-import ru.practicum.shareit.user.model.User;
-
-import javax.persistence.EntityNotFoundException;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -22,8 +19,8 @@ public class UserServiceIntegrationTest {
 
     @Test
     void shouldNotAddUserIfEmailDuplicate() {
-        UserDto userRequest1 = new UserDto(null,"test","uniqueemail@mail.ru");
-        UserDto userRequest2 = new UserDto(null,"test","uniqueemail@mail.ru");
+        UserDto userRequest1 = new UserDto(null, "test", "uniqueemail@mail.ru");
+        UserDto userRequest2 = new UserDto(null, "test", "uniqueemail@mail.ru");
 
 
         UserDto user1 = userService.add(userRequest1);
