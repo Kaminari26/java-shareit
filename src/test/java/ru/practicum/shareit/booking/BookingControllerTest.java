@@ -138,21 +138,6 @@ class BookingControllerTest {
                 .andExpect(jsonPath("$[0].id", is(bookingDtoResponse.getId()), Long.class))
                 .andExpect(jsonPath("$[0].status", is(bookingDtoResponse.getStatus().toString())));
     }
-
-//  @Test
-//    void getBookingsByOwnerFail() throws Exception{
-//      //  doThrow(IllegalReceiveException.class).
-//       // when(bookingService).getAllByOwner(anyLong(),anyString(), anyInt(),anyInt());
-//
-//        mockMvc.perform(get("/bookings/owner")
-//                        .header(userHeader, 1)
-//                        .param("from", "-1")
-//                        .param("size", "-10")
-//                        .param("state", "ALL")
-//                .characterEncoding(StandardCharsets.UTF_8))
-//                .andExpect(status().isBadRequest());
-//    }
-
     @Test
     void getBookingsByBooker() throws Exception {
         when(bookingService.getAllByBookers(anyLong(), anyString(), anyInt(), anyInt()))

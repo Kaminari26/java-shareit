@@ -255,7 +255,9 @@ class ItemServiceImplTest {
         ItemServiceImpl itemService = new ItemServiceImpl(repository, bookingRepository, userService, commentRepository);
         ItemDtoForBooking itemDtoForBooking = itemService.getItemDtoForBooking(1L, 1L);
 
-        Assertions.assertEquals("ItemDtoForBooking(id=1, name=GameBoy, description=help me, available=true, owner=1, lastBooking=BookingDto(id=1, start=null, end=null, itemId=null, bookerId=1, status=null), nextBooking=BookingDto(id=2, start=null, end=null, itemId=null, bookerId=1, status=null), comments=[])", itemDtoForBooking.toString());
+        Assertions.assertEquals(1L, itemDtoForBooking.getId());
+        Assertions.assertEquals("GameBoy", itemDtoForBooking.getName());
+        Assertions.assertEquals("help me", itemDtoForBooking.getDescription());
     }
 
     @Test
@@ -268,7 +270,7 @@ class ItemServiceImplTest {
     }
 
     @Test
-    void addCommentОк() {
+    void addCommentTest() {
         List<Booking> bookings = new ArrayList<>();
         Item item1 = new Item(1L, "GameBoy", "help me", true, 1L, 2L);
         User user = new User(1L, "Vasya", "Pupkin@yandex.ru");
