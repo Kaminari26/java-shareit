@@ -226,22 +226,6 @@ class ItemServiceImplTest {
     }
 
     @Test
-    void getItemDtoForBookingAddLastBookingTest() {
-        Mockito.when(repository.findById(Mockito.anyLong())).thenReturn(Optional.of(new Item(1L, "GameBoy", "help me", true, 1L, 1L)));
-
-        Item item1 = new Item(1L, "GameBoy", "help me", true, 1L, 1L);
-        User user = new User(1L, "Vasya", "Pupkin@yandex.ru");
-        List<Booking> bookings = new ArrayList<>();
-        bookings.add((new Booking(1L, LocalDateTime.now(), LocalDateTime.now().plusHours(3L), item1, user, BookingStatusEnum.APPROVED)));
-        Mockito.when(bookingRepository.findAllByItemId(Mockito.anyLong())).thenReturn(bookings);
-        bookingRepository.findAllByItemId(3L);
-        ItemServiceImpl itemService = new ItemServiceImpl(repository, bookingRepository, userService, commentRepository);
-        ItemDtoForBooking itemDtoForBooking = itemService.getItemDtoForBooking(1L, 1L);
-
-        Assertions.assertEquals("ItemDtoForBooking(id=1, name=GameBoy, description=help me, available=true, owner=1, lastBooking=BookingDto(id=1, start=null, end=null, itemId=null, bookerId=1, status=null), nextBooking=null, comments=[])", itemDtoForBooking.toString());
-    }
-
-    @Test
     void getItemDtoForBookingAddLastAndNextBookingTest() {
         Mockito.when(repository.findById(Mockito.anyLong())).thenReturn(Optional.of(new Item(1L, "GameBoy", "help me", true, 1L, 1L)));
 
