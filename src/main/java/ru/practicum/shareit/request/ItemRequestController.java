@@ -16,7 +16,7 @@ import java.util.List;
 @RequestMapping("/requests")
 public class ItemRequestController {
 
-    IItemRequestService itemRequestService;
+    private final IItemRequestService itemRequestService;
 
     @Autowired
     public ItemRequestController(IItemRequestService itemRequestService) {

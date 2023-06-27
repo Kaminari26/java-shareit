@@ -8,8 +8,6 @@ import ru.practicum.shareit.booking.dto.BookingDto;
 import ru.practicum.shareit.booking.dto.BookingDtoResponse;
 
 import javax.validation.Valid;
-import javax.validation.constraints.Positive;
-import javax.validation.constraints.PositiveOrZero;
 import java.util.List;
 
 @RestController
@@ -54,8 +52,8 @@ public class BookingController {
     @GetMapping
     public List<BookingDtoResponse> getBookingsByBooker(@RequestHeader(name = "X-Sharer-User-Id") Long userId,
                                                         @RequestParam(name = "state", defaultValue = "ALL") String state,
-                                                        @RequestParam(value = "from", defaultValue = "0", required = false) @PositiveOrZero Integer from,
-                                                        @RequestParam(value = "size", defaultValue = "10", required = false) @Positive Integer size) {
+                                                        @RequestParam(value = "from", defaultValue = "0", required = false) Integer from,
+                                                        @RequestParam(value = "size", defaultValue = "10", required = false) Integer size) {
         if (size <= 0 || from < 0) {
             throw new IllegalReceiveException("Неверно указан параметр");
         }
@@ -65,8 +63,8 @@ public class BookingController {
 
     @GetMapping("/owner")
     public List<BookingDtoResponse> getBookingsByOwner(@RequestHeader(name = "X-Sharer-User-Id") Long userId,
-                                                       @RequestParam(name = "state", defaultValue = "ALL") String state, @RequestParam(value = "from", defaultValue = "0", required = false) @PositiveOrZero Integer from,
-                                                       @RequestParam(value = "size", defaultValue = "10", required = false) @Positive Integer size) {
+                                                       @RequestParam(name = "state", defaultValue = "ALL") String state, @RequestParam(value = "from", defaultValue = "0", required = false) Integer from,
+                                                       @RequestParam(value = "size", defaultValue = "10", required = false) Integer size) {
         if (size <= 0 || from < 0) {
             throw new IllegalReceiveException("Неверно указан параметр");
         }

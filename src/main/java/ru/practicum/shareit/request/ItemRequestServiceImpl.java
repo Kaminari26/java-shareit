@@ -14,7 +14,6 @@ import ru.practicum.shareit.request.mapper.ItemRequestMapper;
 import ru.practicum.shareit.user.UserRepository;
 import ru.practicum.shareit.user.model.User;
 
-import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Objects;
 import java.util.stream.Collectors;
@@ -41,9 +40,7 @@ public class ItemRequestServiceImpl implements IItemRequestService {
         if (itemRequestDto.getDescription() == null || itemRequestDto.getDescription().isBlank()) {
             throw new InvalidStatusException("Не может быть пустым");
         }
-        ItemRequest itemRequest = ItemRequestMapper.toItemRequestDto(itemRequestDto, userId);
-        itemRequest.setRequest(user);
-        itemRequest.setCreated(LocalDateTime.now());
+        ItemRequest itemRequest = ItemRequestMapper.toItemRequestDto(itemRequestDto, user);
         itemRequestRepository.save(itemRequest);
         return ItemRequestMapper.toItemRequestDto(itemRequest);
     }
@@ -61,9 +58,10 @@ public class ItemRequestServiceImpl implements IItemRequestService {
 
     @Override
     public ItemRequestDto getItemRequest(Long requestId) {
-        ItemRequestDto itemRequestDto = ItemRequestMapper.toItemRequestDto(itemRequestRepository.findById(requestId).orElseThrow(() -> new UserNotFoundException("Реквест не найден")));
-        itemRequestDto.setItems(itemRepository.findAllByRequestId(itemRequestDto.getId()));
-        return itemRequestDto;
+        ItemRequest itemRequest = itemRequestRepository.findById(requestId).orElseThrow(() -> new UserNotFoundException("Реквест не найден"));
+        ItemRequestDto itemRequestDto = ItemRequestMapper.toItemRequestDto(itemRequest);
+        List<Item> list = itemRepository.findAllByRequestId(itemRequestDto.getId());
+        return ItemRequestMapper.toItemRequestDto(itemRequest, list);
     }
 
     @Override
@@ -76,7 +74,6 @@ public class ItemRequestServiceImpl implements IItemRequestService {
         Pageable pageable = PageRequest.of(page, size, Sort.by("created").descending());
 
         List<ItemRequestDto> requests = itemRequestRepository.findAllByRequestIdNot(userId, pageable).stream().map(ItemRequestMapper::toItemRequestDto).collect(Collectors.toList());
-
 
         List<Item> items = itemRepository.findAllByRequestIdIn(requests.stream().map(ItemRequestDto::getId).collect(Collectors.toList()));
         for (ItemRequestDto itemRequest : requests) {
