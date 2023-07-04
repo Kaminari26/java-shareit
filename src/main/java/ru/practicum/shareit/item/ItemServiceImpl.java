@@ -47,8 +47,8 @@ public class ItemServiceImpl implements IItemService {
         if (userService.get(item.getOwner()) == null) {
             throw new UserNotFoundException("Пользователь не найден");
         }
-        repository.save(item);
-        return ItemMapper.toItemDto(item);
+        Item newItem = repository.save(item);
+        return ItemMapper.toItemDto(newItem);
     }
 
     @Override
@@ -81,7 +81,7 @@ public class ItemServiceImpl implements IItemService {
 
     @Override
     public void deleted(Long itemId) {
-
+        repository.deleteById(itemId);
     }
 
     @Override
@@ -107,10 +107,8 @@ public class ItemServiceImpl implements IItemService {
     @Override
     @Transactional(readOnly = true)
     public ItemDtoForBooking getItemDtoForBooking(Long id, Long ownerId) {
-        ItemDtoForBooking itemDtoForBooking = ItemMapper.toDtoItemForBooking(repository.findById(id).orElseThrow(() ->
-                new UserNotFoundException("Предмет не найден")));
+        ItemDtoForBooking itemDtoForBooking = ItemMapper.toDtoItemForBooking(repository.findById(id).orElseThrow(() -> new UserNotFoundException("Предмет не найден")));
         List<Booking> bookings = bookingRepository.findAllByItemId(id);
-
         itemDtoForBooking.setComments(commentRepository.findAllByItemId(id).stream().map(CommentMapper::mapToDto)
                 .collect(Collectors.toList()));
         return setLastAndNext(bookings, itemDtoForBooking, ownerId);
@@ -131,7 +129,7 @@ public class ItemServiceImpl implements IItemService {
                 .collect(Collectors.toList());
 
         if (bookings.isEmpty()) {
-            throw new InvalidStatusException("ошибка");
+            throw new InvalidStatusException("Ошибка");
         }
 
         comment.setAuthor(author);

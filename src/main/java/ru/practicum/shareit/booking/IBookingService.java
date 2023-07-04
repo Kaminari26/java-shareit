@@ -14,9 +14,9 @@ public interface IBookingService {
 
     BookingDtoResponse getBooking(Long userId, Long bookingId);
 
-    List<BookingDtoResponse> getAllByBookers(Long userId, String state);
+    List<BookingDtoResponse> getAllByBookers(Long userId, String state, Integer from, Integer size);
 
-    List<BookingDtoResponse> getAllByOwner(Long ownerId, String state);
+    List<BookingDtoResponse> getAllByOwner(Long ownerId, String state, Integer from, Integer size);
 
     List<Booking> getAllByItemId(Long id);
 

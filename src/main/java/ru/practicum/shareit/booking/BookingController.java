@@ -1,5 +1,6 @@
 package ru.practicum.shareit.booking;
 
+import com.sun.nio.sctp.IllegalReceiveException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -50,13 +51,23 @@ public class BookingController {
 
     @GetMapping
     public List<BookingDtoResponse> getBookingsByBooker(@RequestHeader(name = "X-Sharer-User-Id") Long userId,
-                                                        @RequestParam(name = "state", defaultValue = "ALL") String state) {
-        return bookingService.getAllByBookers(userId, state);
+                                                        @RequestParam(name = "state", defaultValue = "ALL") String state,
+                                                        @RequestParam(value = "from", defaultValue = "0", required = false) Integer from,
+                                                        @RequestParam(value = "size", defaultValue = "10", required = false) Integer size) {
+        if (size <= 0 || from < 0) {
+            throw new IllegalReceiveException("Неверно указан параметр");
+        }
+
+        return bookingService.getAllByBookers(userId, state, from, size);
     }
 
     @GetMapping("/owner")
     public List<BookingDtoResponse> getBookingsByOwner(@RequestHeader(name = "X-Sharer-User-Id") Long userId,
-                                                       @RequestParam(name = "state", defaultValue = "ALL") String state) {
-        return bookingService.getAllByOwner(userId, state);
+                                                       @RequestParam(name = "state", defaultValue = "ALL") String state, @RequestParam(value = "from", defaultValue = "0", required = false) Integer from,
+                                                       @RequestParam(value = "size", defaultValue = "10", required = false) Integer size) {
+        if (size <= 0 || from < 0) {
+            throw new IllegalReceiveException("Неверно указан параметр");
+        }
+        return bookingService.getAllByOwner(userId, state, from, size);
     }
 }
