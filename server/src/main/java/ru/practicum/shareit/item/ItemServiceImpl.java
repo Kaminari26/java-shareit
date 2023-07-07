@@ -105,7 +105,7 @@ public class ItemServiceImpl implements IItemService {
     }
 
     @Override
-    @Transactional(readOnly = true)
+            //@Transactional(readOnly = true)
     public ItemDtoForBooking getItemDtoForBooking(Long id, Long ownerId) {
         ItemDtoForBooking itemDtoForBooking = ItemMapper.toDtoItemForBooking(repository.findById(id).orElseThrow(() -> new UserNotFoundException("Предмет не найден")));
         List<Booking> bookings = bookingRepository.findAllByItemId(id);
@@ -139,7 +139,7 @@ public class ItemServiceImpl implements IItemService {
 
     @Transactional(readOnly = true)
     private ItemDtoForBooking setLastAndNext(List<Booking> bookings, ItemDtoForBooking itemDtoForBooking, Long ownerId) {
-        LocalDateTime dateTime = LocalDateTime.now();
+        LocalDateTime dateTime = LocalDateTime.now().plusSeconds(10);
         bookings
                 .stream()
                 .filter(booking -> Objects.equals(booking.getItem().getId(), itemDtoForBooking.getId()))
