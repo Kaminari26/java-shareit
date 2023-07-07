@@ -86,7 +86,7 @@ public class ItemServiceImpl implements IItemService {
 
     @Override
     public List<ItemDtoForBooking> getItems(Long userId) {
-        List<ItemDtoForBooking> list = repository.findAllByOwner(userId).stream().map(ItemMapper::toDtoItemForBooking).collect(Collectors.toList());
+        List<ItemDtoForBooking> list = repository.findAllByOwnerOrderById(userId).stream().map(ItemMapper::toDtoItemForBooking).collect(Collectors.toList());
         List<Long> itemsId = list.stream()
                 .map(ItemDtoForBooking::getId)
                 .collect(Collectors.toList());
@@ -139,13 +139,13 @@ public class ItemServiceImpl implements IItemService {
 
     @Transactional(readOnly = true)
     private ItemDtoForBooking setLastAndNext(List<Booking> bookings, ItemDtoForBooking itemDtoForBooking, Long ownerId) {
-       // LocalDateTime dateTime = LocalDateTime.now();
+        LocalDateTime dateTime = LocalDateTime.now();
         bookings
                 .stream()
                 .filter(booking -> Objects.equals(booking.getItem().getId(), itemDtoForBooking.getId()))
                 .sorted(Comparator.comparing(Booking::getEnd).reversed())
                 .filter(booking -> booking.getStatus().equals(BookingStatusEnum.APPROVED))
-                .filter(booking -> booking.getStart().isBefore(LocalDateTime.now()))
+                .filter(booking -> booking.getStart().isBefore(dateTime))
                 .filter(ItemDtoForBooking -> itemDtoForBooking.getOwner().equals(ownerId)).filter(booking -> booking.getItem().getId().equals(itemDtoForBooking.getId()))
                 .limit(1)
                 .findAny()
@@ -158,7 +158,7 @@ public class ItemServiceImpl implements IItemService {
                 .filter(booking -> Objects.equals(booking.getItem().getId(), itemDtoForBooking.getId()))
                 .sorted(Comparator.comparing(Booking::getStart))
                 .filter(booking -> booking.getStatus().equals(BookingStatusEnum.APPROVED))
-                .filter(booking -> booking.getStart().isAfter(LocalDateTime.now()))
+                .filter(booking -> booking.getStart().isAfter(dateTime))
                 .filter(ItemDtoForBooking -> itemDtoForBooking.getOwner().equals(ownerId)).filter(booking -> booking.getItem().getId().equals(itemDtoForBooking.getId()))
                 .limit(1)
                 .findAny()
