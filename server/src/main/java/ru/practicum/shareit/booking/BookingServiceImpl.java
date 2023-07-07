@@ -49,7 +49,7 @@ public class BookingServiceImpl implements IBookingService {
         UserDto userDto = userService.get(owner);
         ItemDtoForBooking itemDtoForBooking = itemService.getItemDtoForBooking(itemDto.getId(), owner);
         if (itemDtoForBooking.getOwner().equals(owner)) {
-            throw new UserNotFoundException("Нельзя забронировать свою же вещь");
+            throw new UserNotFoundException("Нельзя забронировать свою же вещь!");
         }
         if (itemDto.getAvailable() && bookingDto.getStart().isBefore(bookingDto.getEnd()) && bookingDto.getStart().isAfter(LocalDateTime.now())) {
 
