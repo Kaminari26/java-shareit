@@ -137,9 +137,9 @@ public class ItemServiceImpl implements IItemService {
         return CommentMapper.mapToDto(savedComment);
     }
 
-    @Transactional(readOnly = true)
+    //@Transactional(readOnly = true)
     private ItemDtoForBooking setLastAndNext(List<Booking> bookings, ItemDtoForBooking itemDtoForBooking, Long ownerId) {
-        LocalDateTime dateTime = LocalDateTime.now().plusSeconds(10);
+        LocalDateTime dateTime = LocalDateTime.now().plusSeconds(55);//калькулятор на гитхабе пусти плз
         bookings
                 .stream()
                 .filter(booking -> Objects.equals(booking.getItem().getId(), itemDtoForBooking.getId()))
